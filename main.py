@@ -1,66 +1,59 @@
 import random
 
-from tkinter import *
+def computer_guess(x):
+    low = 1
+    high = x
+    feedback = ''
+    attempts = 0
+
+    while feedback != 'c': 
+        attempts += 1
+        if low != high:
+            guess = random.randint(low, high)
+        else:
+            guess = low # could also be high since low == high
+
+        feedback = input(f'Is {guess} too high (H), too low (L), or correct (C)? ').lower()
+        if feedback == 'h':
+            high = guess - 1
+        elif feedback == 'l':
+            low = guess + 1
+    print(f'Yay! The computer guessed your number {guess} in {attempts} attempts.')
 
 
-top_of_range = 100
-random_number = random.randint(1,top_of_range)
-guesses = 0
+def user_guess(x):
+    number = random.randint(1, x)
+    guess = 0
+    attempts = 0
+
+    while guess != number:
+        guess = int(input(f'Guess a number between 1 and {x}: '))
+        attempts += 1
+        if guess < number:
+            print('Too low!')
+        elif guess > number:
+            print('Too high!')
+
+    print(f'Congratulations! You guessed the number {number} in {attempts} attempts.')
+
+
+
 def main():
-        global guesses
-        guesses += 1
-        user_guess = window.user_guess.get()
-        if user_guess.isdigit():
-            user_guess = int(user_guess)
-        else:
-            result_label.config(text="Enter a number next time")
-            return
+    print("Welcome to the Number Guessing Game!")
+    print("-----------------------------------")
+    print("Choose a mode: ")
+    print("U: You guess the computer's number")
+    print("C: Computer guesses your number")
+    mode = input("").lower()
+    x = int(input("Enter the upper limit for the number range (1 to x): "))
 
-        if user_guess == random_number:
-            result_label.config(text="Congratulations you got it correct!!")
-            return
-        else:
-            if user_guess > random_number:
-                result_label.config(text="Your guess is high, try again!! ")
-            else:
-                result_label.config(text="Your guess is low, try again!!")
-        number_of_guesses_label.config(text=f"Number of guesses: {guesses}")
-        window.user_guess.delete(0, END)
+    if mode == 'u':
+        user_guess(x)
+    elif mode == 'c':
+        computer_guess(x)
+    else:
+        print("Invalid option. Please choose 'U' or 'C'.")
 
 
-
-
-
-window = Tk()
-
-window.title("Number Guessing Game")
-
-window.geometry("400x300")
-
-
-window.label = Label(window, text="Welcome to the Number Guessing Game!", font=("Arial", 16))
-
-window.label.pack(pady=20)
-
-window.instructions = Label(window, text="Guess a number between 1 and 100", font=("Arial", 12))
-
-window.instructions.pack(pady=10)
-
-window.user_guess = Entry(window, width=20)
-
-window.user_guess.pack(pady=10)
-
-Label(window, text="Enter your guess above and press Submit", font=("Arial", 10)).pack(pady=5)
-
-Button(window, text="Submit", command=main).pack(pady=20)
-
-result_label = Label(window, text="", font=("Arial", 12))
-
-result_label.pack(pady=10)
-
-number_of_guesses_label = Label(window, text= f"Number of guesses: {guesses}", font=("Arial", 10))
-
-number_of_guesses_label.pack(pady=5)
-
-
-window.mainloop()
+if __name__ == "__main__":
+    main()
